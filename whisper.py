@@ -1,16 +1,10 @@
 import mlx_whisper
 from pydub import AudioSegment
 import numpy as np
-import os
 
-# 音声ファイルを指定して文字起こし
-audio_file_path = "python-audio-output.wav"
-
-result = mlx_whisper.transcribe(
-  audio_file_path, path_or_hf_repo="whisper-base-mlx"
-)
-
-# 音声データを指定して文字起こし
+# -------------------------------
+# 音声前処理関数
+# -------------------------------
 def preprocess_audio(sound):
     if sound.frame_rate != 16000:
         sound = sound.set_frame_rate(16000)
@@ -20,18 +14,20 @@ def preprocess_audio(sound):
         sound = sound.set_channels(1)
     return sound
 
-audio_data = []
 
-def save_text_to_file(text, filename="transcription_result.txt"):
+# -------------------------------
+# テキスト保存関数
+# -------------------------------
+def save_text_to_file(filename, text):
     """
-    認識結果を .txt ファイルに保存する関数
+    認識結果を指定したテキストファイルに保存する関数
     """
     try:
         with open(filename, "a", encoding="utf-8") as f:
             f.write(text + "\n")
-        print(f"{filename} に結果を保存しました。")
+        print(f" {filename} に保存しました。")
     except Exception as e:
-        print("保存中にエラーが発生しました:", e)
+        print(f" 保存中にエラーが発生しました: {e}")
 
 
 # -------------------------------
@@ -48,6 +44,7 @@ audio_data.append(("audio-output-after.wav", AudioSegment.from_file("audio-outpu
 output_txt = "transcription_result.txt"
 
 # 前回の結果を消す（上書き保存）
+import os
 if os.path.exists(output_txt):
     os.remove(output_txt)
 
