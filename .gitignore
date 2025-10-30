@@ -1,0 +1,8 @@
+.vscode/
+__pycache__/
+
+# modelはサイズがでかいので🐝
+whisper-base-mlx/
+
+# 音声ファイルもいらない
+*.wav
